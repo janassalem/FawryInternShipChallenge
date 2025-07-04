@@ -1,4 +1,4 @@
-public class NonExpiringShippableProduct extends Product implements Shippable{
+public class NonExpiringShippableProduct extends Product implements Shippable, Expirable{
     private  double weight;
 
     public NonExpiringShippableProduct(String name, double price, int quantity, double weight) {

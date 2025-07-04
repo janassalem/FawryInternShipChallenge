@@ -1,4 +1,4 @@
-public class ExpiringShippableProduct extends Product implements Shippable{
+public class ExpiringShippableProduct extends Product implements Shippable, Expirable{
 
     private  boolean expired;
     private  double weight;

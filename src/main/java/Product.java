@@ -8,7 +8,7 @@ public abstract class Product {
         this.price = price;
         this.quantity = quantity;
     }
-    public abstract  boolean isExpired();
+
     public abstract boolean  requiresShipping();
 
     public String getName() {

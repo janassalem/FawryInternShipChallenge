@@ -1,4 +1,4 @@
-public abstract class NonShippableProduct extends Product implements Shippable {
+public abstract class NonShippableProduct extends Product implements Shippable,Expirable {
     private boolean expired;
 
     public NonShippableProduct(String name, double price, int quantity, boolean expired) {

@@ -11,12 +11,13 @@ public class Main {
             }
         };
 
-        Customer customer = new Customer("John", 4000);
+        Customer customer = new Customer("Jana Salem", 4000);
         Cart cart = new Cart();
 
         cart.add(cheese, 2);
         cart.add(tv, 3);
         cart.add(biscuits, 1);
+
         cart.add(scratchCard, 1);
 
         Checkout.process(customer, cart);

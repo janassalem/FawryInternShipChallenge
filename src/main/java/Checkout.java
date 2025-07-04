@@ -10,7 +10,7 @@ public class Checkout {
         List<Shippable> shippableItems = new ArrayList<>();
 
         for (CartItem item : items) {
-            if (item.product.isExpired()) {
+            if ( item.product instanceof Expirable expirable && expirable.isExpired()) {
                 throw new RuntimeException(item.product.getName() + " has expired!");
             }
             if (item.quantity > item.product.getQuantity()) {

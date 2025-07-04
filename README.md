@@ -1,6 +1,6 @@
 # Fawry Quantum Internship Challenge – E-Commerce System
 
-This is a Java-based mini e-commerce system built for the **Fawry Rise Full Stack Internship Challenge**. It handles product definition, cart logic, checkout operations, and shipping logic with well-structured OOP design.
+This is a Java-based mini e-commerce system built for the **Fawry Rise Full Stack Internship Challenge**. It handles product definition, cart logic, checkout operations, and shipping logic with well-structured OOP design based on clean inheritance and interface segregation.
 
 ---
 
@@ -8,10 +8,10 @@ This is a Java-based mini e-commerce system built for the **Fawry Rise Full Stac
 
 -  Product catalog with:
     - Name, price, and quantity
-    - Expiry support (e.g. Cheese, Biscuits)
-    - Shipping requirement and weight (e.g. TV, Cheese)
+    - **Expiry support** via `Expirable` interface (e.g. Cheese, Biscuits)
+    - **Shipping requirement and weight** via `Shippable` interface (e.g. TV, Cheese)
 -  Customer with wallet/balance
--  Cart functionality
+-  Cart functionality:
     - Quantity control
     - Stock validation
 -  Checkout system:
@@ -27,39 +27,59 @@ This is a Java-based mini e-commerce system built for the **Fawry Rise Full Stac
 
 ##  System Design
 
-### Key Classes & Interfaces:
+###  Key Classes & Interfaces:
 
-- `Product` (abstract)
-    - `ExpiringShippableProduct`
-    - `NonExpiringShippableProduct`
-    - `NonShippableProduct`
+#### Abstract Class:
+- `Product`
+    - Common fields: `name`, `price`, `quantity`
+    - Abstract method: `requiresShipping()`
 
-- `Shippable` (interface)
-    - Enforces `getName()` and `getWeight()`
+#### Interfaces:
+- `Shippable`
+    - `getName()`, `getWeight()`
+- `Expirable`
+    - `isExpired()`
 
-- `Cart`, `CartItem`
-- `Customer`
-- `Checkout` (static class)
-- `ShippingService` (utility)
+#### Implementing Product Variants:
+- `ExpiringShippableProduct`  
+  → implements both `Shippable` & `Expirable`
+- `NonExpiringShippableProduct`  
+  → implements only `Shippable`
+- `NonShippableProduct`  
+  → optionally implements `Expirable`
 
-### Relationships:
+#### Other Core Classes:
+- `Cart`, `CartItem` – holds products & quantities
+- `Customer` – holds balance
+- `Checkout` – handles all validations, totals, and payments
+- `ShippingService` – processes shipping for `Shippable` items
 
-- Products implement or extend behavior depending on expiry and shipping needs.
-- `Checkout` identifies expired/out-of-stock items and checks balance.
-- If items require shipping, they are collected and passed to `ShippingService`.
+---
+
+##  Relationships & Logic Flow
+
+- Products may implement:
+    - `Shippable` → if they require delivery
+    - `Expirable` → if they can expire
+- `Checkout.process(...)`:
+    - Validates quantity, expiry, balance
+    - Deducts stock and customer balance
+    - Invokes `ShippingService` if needed
+- `ShippingService`:
+    - Accepts `List<Shippable>`
+    - Displays item weights and total package weight
 
 ---
 
 ##  How to Run
 
-1. Open project in **IntelliJ IDEA** or any Java IDE.
-2. Make sure you're using **Java 17+** (tested with Java 21 / 24).
-3. Run `Main.java`.
-
+1. Open the project in **IntelliJ IDEA** or any Java IDE.
+2. Ensure Java 17+ is installed (**tested with Java 21 & 24**).
+3. Run the `Main.java` file directly.
 
 ---
 
-##  Sample Test Case "included in the Main"
+##  Sample Test Case (included in `Main.java`)
 
 ```java
 Product cheese = new ExpiringShippableProduct("Cheese", 100, 5, false, 0.2);
@@ -75,5 +95,25 @@ cart.add(biscuits, 1);
 cart.add(scratchCard, 1);
 
 Checkout.process(customer, cart);
+```
 
+##  Sample OutPut
 
+```java
+
+** Shipment notice **
+1x Cheese        200g
+1x Cheese        200g
+1x Biscuits      700g
+Total package weight 1.1kg
+
+** Checkout receipt **
+2x Cheese        200
+1x Biscuits      150
+1x ScratchCard   50
+----------------------
+Subtotal         400
+Shipping         30
+Amount           430
+Balance left     570
+```
